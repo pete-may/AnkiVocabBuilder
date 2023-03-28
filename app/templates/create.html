@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Create Vocab Card</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <h3><b>Images</b></h2> 
+
+        
+        <p class="text-muted my-2">Click on the images below to select them.<br>
+            Click on any selected images to remove them.
+        </p>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="gallery" style="text-align: center">
+                        <!-- <span><img src="{{ url_for('static', filename='loading.gif') }}"> Loading...</span> -->
+                        {% for image in images %}
+                            <div class="gallery-item-wrapper col-md-4">
+                                <div class="gallery-item">
+                                    <img class="img-responsive" src="{{ url_for('static', filename='tmp/images/' + image) }}">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="gallery-selected" style="text-align: center">
+                        <p>Images to Use</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3><b>Recording</b></h2>
+
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#local" onclick="handleTabClick('local')">Local</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#forvo" onclick="handleTabClick('forvo')">Forvo</a>
+            </li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div id="local" class="tab-pane active">
+                <h3>Local</h3>
+                <p>Choose recording from local filesystem.</p>
+
+                <span id="local_file">{{ form.recording() }}</span>
+
+              <button type="button" onclick="playSound('local')" >Play Pronunciation</button>
+            </div>
+            <div id="forvo" class="tab-pane" >
+                  <h3>Forvo</h3>
+                  <p>Pick a recording using the Forvo API.</p>
+
+                  <span id="forvo_file"></span>
+
+                  <button type="button" onclick="playSound('forvo')" >Play Pronunciation</button>
+            </div>
+          </div>
+
+        <br>
+
+        {{ wtf.form_field(form.ipa) }}
+
+        {{ wtf.form_field(form.notes) }}
+
+        {{ wtf.form_field(form.submit) }}
+
+    </form>
+    <script type="text/javascript">
+        var local_recordings = {{ local_recording_choices | safe }}
+        var forvo_recordings = {{ forvo_recording_choices | safe }}
+    </script>
+{% endblock %}

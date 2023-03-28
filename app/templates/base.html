@@ -1,0 +1,39 @@
+{% extends 'bootstrap/base.html' %}
+
+
+{% block title %}
+    {{ config["APP_TITLE"] }}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var local_recordings_dir = '{{ config["LOCAL_RECORDINGS_DIR"] }}'
+        var forvo_recordings_dir = '{{ config["FORVO_RECORDINGS_DIR"] }}'
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}" ></script>
+    {{super()}}
+{% endblock %}
+
+
+{% block styles %}
+{{super()}}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
