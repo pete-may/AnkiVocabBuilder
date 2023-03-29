@@ -1,26 +1,16 @@
-from flask import render_template, url_for, request, flash, redirect
+from flask import render_template, url_for, request, flash, redirect, jsonify
 from app import app, forms
 
 from app import local_recording_choices
 
 from app import anki, wiktionary, forvo
 
-from app import images_list
+from app.services.google_images import serpapi_get_google_images
 
-
+from app import remove_temp_recordings, remove_temp_images
 
 import re
 import os
-
-
-TEMP_IMAGE_CHOICES = [
-    "original_size_img_14",
-    "original_size_img_15",
-    "original_size_img_21",
-    "original_size_img_24",
-    "original_size_img_28",
-    "original_size_img_32"
-]
 
 
 
@@ -56,8 +46,6 @@ def index():
 
 
 
-
-
     return render_template('submit.html', form=form)
 
 
@@ -70,12 +58,32 @@ def scrape():
 
     if form.validate_on_submit():
         flash(form.data)
+
+        print(form.recording_type.data)
+
+        anki.add_note(form.deck.data, 
+                      form.word.data,
+                      form.images.data.split(","),
+                      form.recording.data,
+                      form.recording_type.data,
+                      form.ipa.data,
+                      form.gender.data,
+                      form.notes.data
+                      )
+
+
         return redirect(url_for('index'))
 
     if request.method == 'POST':
         flash(form.data)
+        flash(form.errors)
         return redirect(url_for('index'))  
 
+    root = word
+
+    remove_temp_recordings()
+    remove_temp_images()
+    setup_root_dir(root)
 
     language = request.args.get('language', None)
     deck = request.args.get('deck', None)
@@ -97,16 +105,27 @@ def scrape():
 
     wikiObject = wiktionary.search(word, language)
 
-    
+    serpapi_get_google_images(root, word, 0)
 
+    image_dir_list = os.listdir(app.config["IMAGES_DIR"])
+    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f]
+
+    form.deck.data = deck
+    form.word.data = word
+    form.search_query.data = word
+
+    form.gender.data = 'none'
+    
     if matches:
         form.recording.data = matches[0]
 
-    form.recording.choices = local_recording_choices
+    form.recording.choices = [(c,c) for c in local_recording_choices]
+    form.recording_type.data = 'local'
 
     form.ipa.data = re.search("/.*/", wikiObject["ipa"]).group()
 
     return render_template('create.html', form=form, 
+                                          query=word,
                                           local_recording_choices=local_recording_choices, 
                                           forvo_recording_choices=forvo_recording_choices,
                                           images=images_list)
@@ -126,6 +145,31 @@ def create():
 @app.route('/<path:path>')
 def static_file(path):
     return app.send_static_file(path)
+
+
+@app.route('/get_more_images')
+def get_more_images():
+    root = request.args.get('root')
+    query = request.args.get('query')
+    offset = request.args.get('offset')
+    refresh_images = request.args.get('refresh_images')
+    print ("Hello")
+    print (query)
+    print (offset)
+    print (refresh_images)
+
+    if refresh_images.lower() == 'true':
+        print ("deleting")
+        remove_temp_images()
+    else:
+        print ("not deleting")
+
+
+    serpapi_get_google_images(root, query, int(offset))
+    image_dir_list = os.listdir(app.config["IMAGES_DIR"])
+    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f] 
+
+    return jsonify(images_list)
 
 
 

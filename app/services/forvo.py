@@ -44,6 +44,7 @@ class Forvo:
         if res.status_code == 200:
             page = res.text
         else:
+            print(res)
             raise Exception("failed to fetch forvo page")
         html = BeautifulSoup(page, "lxml")
         available_langs_els = html.find_all(

@@ -3,6 +3,15 @@
 
 {% block app_content %}
     <h1>Create Vocab Card</h1>
+    <br>
+    <div class="row">
+        <b>Redo image search</b>
+        <br>
+        <form id="image_search">
+            <input type="text" id=image_query>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
 
@@ -17,14 +26,18 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="gallery" style="text-align: center">
-                        <!-- <span><img src="{{ url_for('static', filename='loading.gif') }}"> Loading...</span> -->
-                        {% for image in images %}
-                            <div class="gallery-item-wrapper col-md-4">
-                                <div class="gallery-item">
-                                    <img class="img-responsive" src="{{ url_for('static', filename='tmp/images/' + image) }}">
+                        <div id="images_row" class="row">
+                            {% for image in images %}
+                                <div class="gallery-item-wrapper col-md-4">
+                                    <div class="gallery-item">
+                                        <img class="img-responsive" src="{{ url_for('static', filename='tmp/images/' + image) }}">
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <div id="loader" class="row">
+                            <button type="button" onclick="loadMoreImages(false)">Load more images...</button>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -71,6 +84,10 @@
 
         {{ wtf.form_field(form.ipa) }}
 
+        <b>Gender</b>
+
+        {{ wtf.form_field(form.gender) }}
+
         {{ wtf.form_field(form.notes) }}
 
         {{ wtf.form_field(form.submit) }}
@@ -79,5 +96,6 @@
     <script type="text/javascript">
         var local_recordings = {{ local_recording_choices | safe }}
         var forvo_recordings = {{ forvo_recording_choices | safe }}
+        var offset = 1
     </script>
 {% endblock %}

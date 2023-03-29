@@ -6,6 +6,16 @@
 {% endblock %}
 
 
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+        </ul>
+    </nav>
+{% endblock %}
+
+
+
 {% block content %}
     <div class="container">
         {% with messages = get_flashed_messages() %}

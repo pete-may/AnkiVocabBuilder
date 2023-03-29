@@ -7,4 +7,6 @@ class Config(object):
     LOCAL_RECORDINGS_DIR = os.path.join(os.getcwd(), "app", "static", "recordings")
     FORVO_RECORDINGS_DIR = os.path.join(os.getcwd(), "app", "static", "tmp", "recordings")
     IMAGES_DIR = os.path.join(os.getcwd(), "app", "static", "tmp", "images")
+    TMP_DIR = os.path.join(os.getcwd(), "app", "static", "tmp")
     LANGUAGES = ["spanish"]
+    NOTE_TYPE = "Vocab Word"

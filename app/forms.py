@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, TextAreaField, SubmitField, HiddenField
+from wtforms import SelectField, StringField, TextAreaField, SubmitField, HiddenField, RadioField
 from wtforms.validators import DataRequired
 
 class SubmitionForm(FlaskForm):
@@ -10,14 +10,13 @@ class SubmitionForm(FlaskForm):
 
 
 class CreateForm(FlaskForm):
-    ipa = StringField("IPA", validators=[DataRequired()])
-    recording = SelectField("Recording", validators=[DataRequired()])
-    # forvo_recording = SelectField("Forvo recording", validators=[DataRequired()])
-    # recordings = StringField("Recordings", validators=[DataRequired()])
-    # recording = StringField("Recording", validators=[DataRequired()])
-    # word_usage = SelectField("Word Usage")
-    # image_query = StringField("Image Query")
+    deck = HiddenField("Deck", validators=[DataRequired()])
+    word = HiddenField("Word", validators=[DataRequired()])
     images = HiddenField("Images")
+    search_query = HiddenField("Search Query")
+    recording = SelectField("Recording", validate_choice=False)
+    recording_type = HiddenField("Recording Type")
+    ipa = StringField("IPA", validators=[DataRequired()])
+    gender = RadioField("Gender", choices=[('none', 'None'), ('male','Male'),('female','Female'), ('either', 'Either')])
     notes = TextAreaField("Notes")
-    # test_spelling = BooleanField("Test Spelling?")
     submit = SubmitField("Add to Anki", id="create_submit")

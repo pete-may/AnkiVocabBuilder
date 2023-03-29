@@ -34,6 +34,10 @@
   background-color: #ccc;
 }
 
+.row {
+    margin-bottom: 20px;
+}
+
 
 .img-selected {
     outline: #0076E8 solid 2px;
@@ -43,16 +47,22 @@
     outline: #f66 solid 2px;
 }
 
+#loader {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 .gallery,
 .gallery-selected {
-    height: 400px;
+    height: 370px;
     overflow-y: auto;
     border: 3px dashed gray;
-    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .gallery-item-wrapper {
-    padding: 5px;
+    padding: 10px;
     height: 100px;
 }
 
