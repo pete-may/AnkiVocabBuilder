@@ -54,7 +54,7 @@
 
 .gallery,
 .gallery-selected {
-    height: 370px;
+    height: 270px;
     overflow-y: auto;
     border: 3px dashed gray;
     padding-left: 20px;

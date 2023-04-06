@@ -1,24 +1,18 @@
 import json
 import urllib.request
 import urllib.error
+
+import redis
+
 from serpapi import GoogleSearch
+from unidecode import unidecode
 
-from app import redis_client
+redis_client = redis.Redis()
+BATCH_SIZE = 6
 
-
-# SEARCHES_MAP = {
-#     "tea": "64223deba5ad6d7d5f48b4e5",
-#     "fuego": "6422560ac504e91384977cfa"
-# }
-
-BATCH_SIZE = 9
-
-
-def serpapi_get_google_images(root, query, offset=0):
+def serpapi_get_google_images(query, offset=0):
     image_results = []
     results = {}
-
-    # search_id = SEARCHES_MAP.get(query)
 
     search_id = redis_client.get(query)
 
@@ -34,8 +28,8 @@ def serpapi_get_google_images(root, query, offset=0):
             "engine": "google",               # search engine. Google, Bing, Yahoo, Naver, Baidu...
             "q": query,                    # search query
             "tbm": "isch",                    # image results
-            "api_key": "e0b8acf5676704931d1250c44c7804888151da32f83a99cf05151621ad7b4a5d",
-            "tbs": "isz:i",
+            "api_key": "",
+            "tbs": "isz:m",
             "hl": "es"
         }
 
@@ -64,12 +58,14 @@ def serpapi_get_google_images(root, query, offset=0):
 
         print(f"Downloading {index} image...")
 
+        query = unidecode(query)
+
         try:
             opener=urllib.request.build_opener()
             opener.addheaders=[("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36")]
             urllib.request.install_opener(opener)
 
-            urllib.request.urlretrieve(image["original"], f"app/static/tmp/images/{root}/{query}_img_{index}.jpg")
+            urllib.request.urlretrieve(image["original"], f"app/static/tmp/images/{query}_img_{index}.jpg")
         except urllib.error.URLError:
             print(f"Downloading {index} image FAILED - 404")
         

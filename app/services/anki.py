@@ -3,6 +3,8 @@ import os
 import base64
 import html
 
+# from unidecode import unidecode
+
 from app import app
 
 class Anki:
@@ -47,16 +49,18 @@ class Anki:
         return dst
 
 
-    @staticmethod
-    def format_notes(notes):
-        html_notes = "<br>".join(html.escape(notes.strip()).split("\n"))
-        return "<div>{}</div>".format(html_notes)
+    # @staticmethod
+    # def format_notes(notes):
+    #     html_notes = "<br>".join(html.escape(notes.strip()).split("\n"))
+    #     return "<div>{}</div>".format(html_notes)
 
     def add_note(self, deck_name, word, image_paths, recording_file_path, recording_type, ipa_text, gender, notes):
         stored_images = []
         for i, image_path in enumerate(image_paths):
             print("image_path")
             print(image_path)
+            if not image_path:
+                continue
             image_path_path = app.config["IMAGES_DIR"] + '/' + image_path
             print(image_path_path)
             stored_images.append(self.store_media_file(image_path_path, "{}-{}".format(word, i)))
@@ -65,7 +69,8 @@ class Anki:
         for stored_image in stored_images:
             picture_field += '<img src="{}">'.format(stored_image)
 
-        formatted_notes = self.format_notes(notes)
+        # formatted_notes = self.format_notes(notes)
+        formatted_notes = notes
 
         # pronunciation_field = ipa_text
 

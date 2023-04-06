@@ -25,6 +25,7 @@ class Wiktionary:
     def search(self, query, language):
         self.parser.set_default_language(language)
         query = self.parser.fetch(query)[0]
+        print(query)
         pronunciation = query["pronunciations"]
         if len(pronunciation["text"]):
             ipa = pronunciation["text"][0].replace("IPA: ", "")
