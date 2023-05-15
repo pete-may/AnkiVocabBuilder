@@ -15,9 +15,7 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
 
-        <h3><b>Images</b></h2> 
-
-        
+        <b>Images</b> 
         <p class="text-muted my-2">Click on the images below to select them.<br>
             Click on any selected images to remove them.
         </p>
@@ -48,40 +46,55 @@
             </div>
         </div>
 
-        <h3><b>Recording</b></h2>
+        {# <h3><b>Recording</b></h2> #}
+        {# <div> #}
+        {#     <h3>Forvo</h3> #}
+        {#     <p>Pick a recording, downloaded from the Forvo API.</p> #}
+        {#     <span id="forvo_file"></span> #}
+        {#     <select name="cars" id="cars"> #}
+        {#         <option value="volvo">Volvo</option> #}
+        {#         <option value="saab">Saab</option> #}
+        {#         <option value="mercedes">Mercedes</option> #}
+        {#         <option value="audi">Audi</option> #}
+        {#     </select> #}
+        {# </div> #}
 
-          <!-- Nav tabs -->
-          <ul class="nav nav-tabs">
-            <li class="active">
-                <a data-toggle="tab" href="#local" onclick="handleTabClick('local')">Local</a>
-            </li>
-            <li>
-                <a data-toggle="tab" href="#forvo" onclick="handleTabClick('forvo')">Forvo</a>
-            </li>
-          </ul>
 
-          <!-- Tab panes -->
-          <div class="tab-content">
-            <!-- REMOVE ME -->
-            <div id="local" class="tab-pane active">
-                <h3>Local</h3>
-                <p>Choose recording from local filesystem.</p>
+          {# <!-- Nav tabs --> #}
+          {# <ul class="nav nav-tabs"> #}
+          {#   <li class="active"> #}
+          {#       <a data-toggle="tab" href="#local" onclick="handleTabClick('local')">Local</a> #}
+          {#   </li> #}
+          {#   <li> #}
+          {#       <a data-toggle="tab" href="#forvo" onclick="handleTabClick('forvo')">Forvo</a> #}
+          {#   </li> #}
+          {# </ul> #}
 
-                <span id="local_file">{{ form.recording() }}</span>
+          {# <!-- Tab panes --> #}
+          {# <div class="tab-content"> #}
+          {#   <!-- REMOVE ME --> #}
+          {#   <div id="local" class="tab-pane active"> #}
+          {#       <h3>Local</h3> #}
+          {#       <p>Choose recording from local filesystem.</p> #}
+          {#  #}
+          {#       <span id="local_file">{{ form.recording() }}</span> #}
+          {#  #}
+          {#     <button type="button" onclick="playSound('local')" >Play Pronunciation</button> #}
+          {#   </div> #}
+          {#   <div id="forvo" class="tab-pane" > #}
+          {#         <h3>Forvo</h3> #}
+          {#         <p>Pick a recording using the Forvo API.</p> #}
+          {#  #}
+          {#         <span id="forvo_file"></span> #}
+          {#  #}
+          {#         <button type="button" onclick="playSound('forvo')" >Play Pronunciation</button> #}
+          {#   </div> #}
+          {# </div> #}
 
-              <button type="button" onclick="playSound('local')" >Play Pronunciation</button>
-            </div>
-            <div id="forvo" class="tab-pane" >
-                  <h3>Forvo</h3>
-                  <p>Pick a recording using the Forvo API.</p>
+        {{ wtf.form_field(form.recording) }}
+        <button type="button" onclick="playSound('forvo')" >Play Pronunciation</button>
 
-                  <span id="forvo_file"></span>
-
-                  <button type="button" onclick="playSound('forvo')" >Play Pronunciation</button>
-            </div>
-          </div>
-
-        <br>
+        <br><br>
 
         {{ wtf.form_field(form.ipa) }}
 
@@ -95,8 +108,6 @@
 
     </form>
     <script type="text/javascript">
-        var local_recordings = {{ local_recording_choices | safe }}
-        var forvo_recordings = {{ forvo_recording_choices | safe }}
         var offset = 1
     </script>
 {% endblock %}

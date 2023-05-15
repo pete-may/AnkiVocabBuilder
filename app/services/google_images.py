@@ -34,7 +34,6 @@ class GoogleImages:
             search_id = search_id.decode("utf-8")
             print("found past search: " + search_id)
             results = GoogleSearch({"api_key": self.api_key}).get_search_archive(search_id, 'json')
-            print(results)
         else:
             print("no past search found, starting new search")
 

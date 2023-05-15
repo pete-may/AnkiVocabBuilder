@@ -10,58 +10,50 @@ function imgSelectWatch() {
         });
 }
 
-function handleTabClick(tab_type) {
-    var str = ""
-    if (tab_type == "local") {
-        if ($("#local_file").html()) {
-            return
-        }
-
-        recording_select = $("#forvo_file").html();
-        $("#forvo_file").html("");
-        $("#local_file").html(recording_select);
-        
-        for (var file_name of local_recordings) {
-            str += "<option>" + file_name + "</option>"
-        }
-        $("#recording").html(str)
-
-        var field = document.getElementById("recording_type");
-        field.value = 'local';
-    }
-    else if (tab_type == "forvo") {
-        if ($("#forvo_file").html()) {
-            return
-        }
-
-        recording_select = $("#local_file").html();
-        $("#local_file").html("");
-        $("#forvo_file").html(recording_select);
-        
-
-        for (var file_name of forvo_recordings) {
-            str += "<option>" + file_name + "</option>"
-        }
-        $("#recording").html(str)
-
-        var field = document.getElementById("recording_type");
-        field.value = 'forvo';
-    }
-}
+// function handleTabClick(tab_type) {
+//     var str = ""
+//     if (tab_type == "local") {
+//         if ($("#local_file").html()) {
+//             return
+//         }
+//
+//         recording_select = $("#forvo_file").html();
+//         $("#forvo_file").html("");
+//         $("#local_file").html(recording_select);
+//         
+//         for (var file_name of local_recordings) {
+//             str += "<option>" + file_name + "</option>"
+//         }
+//         $("#recording").html(str)
+//
+//         var field = document.getElementById("recording_type");
+//         field.value = 'local';
+//     }
+//     else if (tab_type == "forvo") {
+//         if ($("#forvo_file").html()) {
+//             return
+//         }
+//
+//         recording_select = $("#local_file").html();
+//         $("#local_file").html("");
+//         $("#forvo_file").html(recording_select);
+//         
+//
+//         for (var file_name of forvo_recordings) {
+//             str += "<option>" + file_name + "</option>"
+//         }
+//         $("#recording").html(str)
+//
+//         var field = document.getElementById("recording_type");
+//         field.value = 'forvo';
+//     }
+// }
 
 function playSound(tab_type) {
-
     console.log("INSIDE playSound");
 
     var filename = document.getElementById("recording").value
-
-    var filepath = ""
-    if (tab_type == "local") {
-        filepath = "/recordings/" + filename
-    }
-    else if (tab_type == "forvo") {
-        filepath = "/tmp/recordings/" + filename
-    }
+    var filepath = "/tmp/recordings/" + filename
 
     console.log(filepath);
 

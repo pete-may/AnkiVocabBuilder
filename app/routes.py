@@ -113,14 +113,15 @@ def create():
 
     dir_list = os.listdir(app.config["FORVO_RECORDINGS_DIR"])
     forvo_recording_choices = [f for f in dir_list if os.path.isfile(app.config["FORVO_RECORDINGS_DIR"]+'/'+f)]
+    form.recording.choices = [(c,c) for c in forvo_recording_choices]
 
     # local recording stuff
     # TODO: remove this ish
-    form.recording.choices = [(c,c) for c in local_recording_choices]
-    form.recording_type.data = 'local'
-    matches = [match for match in local_recording_choices if word in match]
-    if matches:
-        form.recording.data = matches[0]
+    # form.recording.choices = [(c,c) for c in local_recording_choices]
+    # form.recording_type.data = 'local'
+    # matches = [match for match in local_recording_choices if word in match]
+    # if matches:
+    #     form.recording.data = matches[0]
 
     # images
     google_images.get_images(word, 0)
@@ -136,8 +137,6 @@ def create():
 
     return render_template('create.html', form=form, 
                                           query=word,
-                                          local_recording_choices=local_recording_choices, 
-                                          forvo_recording_choices=forvo_recording_choices,
                                           images=images_list)
 
 
