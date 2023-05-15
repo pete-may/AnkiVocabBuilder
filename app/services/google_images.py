@@ -21,12 +21,20 @@ class GoogleImages:
         image_results = []
         results = {}
 
-        search_id = redis_client.get(query)
+
+        search_id = ""
+        REDIS_RUNNING = True
+        try:
+            search_id = redis_client.get(query)
+        except redis.exceptions.ConnectionError:
+            REDIS_RUNNING = False
+            print("Warning: The Redis server is not running. Searches will not be saved.")
 
         if search_id:
             search_id = search_id.decode("utf-8")
             print("found past search: " + search_id)
             results = GoogleSearch({"api_key": self.api_key}).get_search_archive(search_id, 'json')
+            print(results)
         else:
             print("no past search found, starting new search")
 
@@ -47,14 +55,16 @@ class GoogleImages:
             new_search_id = results.get("search_metadata").get("id")
             print("search id:")
             print(new_search_id)
-            redis_client.set(query, new_search_id)
+
+            if REDIS_RUNNING:
+                redis_client.set(query, new_search_id)
 
         # Downloading images
 
         for index, image in enumerate(results["images_results"]):
 
-            if index == 5:
-                continue
+            # if index == 5:
+            #     continue
 
             # if index == 0:
             #     continue

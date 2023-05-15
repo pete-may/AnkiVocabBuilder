@@ -3,6 +3,7 @@ from app import app, forms, anki, wiktionary, forvo, google_images
 from app import local_recording_choices
 from app import remove_temp_recordings, remove_temp_images
 
+
 import re
 import os
 
