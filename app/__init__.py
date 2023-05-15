@@ -9,15 +9,18 @@ app.config.from_object(Config)
 bootstrap = Bootstrap(app)
 
 from app.services import anki
-from app.services.google_images import serpapi_get_google_images
+from app.services.google_images import GoogleImages
 from app.services import forvo
 from app.services import wiktionary
+from app.services import google_images
 
 anki = anki.Anki()
-get_images = serpapi_get_google_images
 forvo = forvo
+google_images = google_images.GoogleImages(app.config["SERP_API_KEY"])
 wiktionary = wiktionary.Wiktionary()
 
+
+# REMOVE ME
 dir_list = os.listdir(app.config["LOCAL_RECORDINGS_DIR"])
 local_recording_choices = [f for f in dir_list if os.path.isfile(app.config["LOCAL_RECORDINGS_DIR"]+'/'+f)] 
 

@@ -1,6 +1,7 @@
 venv
 __pycache__
 .DS_Store
+Session.vim
 
 app/static/recordings/*
 app/static/tmp/images/*

@@ -1,5 +1,5 @@
 from flask import render_template, url_for, request, flash, redirect, jsonify
-from app import app, forms, anki, wiktionary, forvo, get_images
+from app import app, forms, anki, wiktionary, forvo, google_images
 from app import local_recording_choices
 from app import remove_temp_recordings, remove_temp_images
 
@@ -26,7 +26,7 @@ def index():
     form.deck.choices = deck_choices
 
     # default deck
-    form.deck.data = "Spanish::Vocab"
+    form.deck.data = app.config["DEFAULT_DECK"]
 
     if form.validate_on_submit():
         language = form.language.data
@@ -101,24 +101,37 @@ def create():
     form.search_query.data = word
 
     # scrape all the things
-    get_images(word, 0)
-    image_dir_list = os.listdir(app.config["IMAGES_DIR"])
-    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f]
 
+    # recordings
+    # do forvo first so we can fail if there's no word
+    try:
+        forvo.download(word)
+    except:
+        err_msg = "A Forvo exception occurred. That word probably doesn't exist."
+        return render_template("500.html", error=err_msg), 500
+
+    dir_list = os.listdir(app.config["FORVO_RECORDINGS_DIR"])
+    forvo_recording_choices = [f for f in dir_list if os.path.isfile(app.config["FORVO_RECORDINGS_DIR"]+'/'+f)]
+
+    # local recording stuff
+    # TODO: remove this ish
     form.recording.choices = [(c,c) for c in local_recording_choices]
     form.recording_type.data = 'local'
-
     matches = [match for match in local_recording_choices if word in match]
     if matches:
         form.recording.data = matches[0]
 
-    forvo.download(word)
-    dir_list = os.listdir(app.config["FORVO_RECORDINGS_DIR"])
-    forvo_recording_choices = [f for f in dir_list if os.path.isfile(app.config["FORVO_RECORDINGS_DIR"]+'/'+f)]
+    # images
+    google_images.get_images(word, 0)
+    image_dir_list = os.listdir(app.config["IMAGES_DIR"])
+    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f]
 
+    # ipa
     wikiObject = wiktionary.search(word, language)
     if wikiObject.get("ipa"):
-        form.ipa.data = re.search("/.*/", wikiObject["ipa"]).group()
+        match = re.search("/.*/", wikiObject["ipa"])
+        if match:
+            form.ipa.data = re.search("/.*/", wikiObject["ipa"]).group()
 
     return render_template('create.html', form=form, 
                                           query=word,
@@ -133,11 +146,7 @@ def get_more_images():
     offset = request.args.get('offset')
     refresh_images = request.args.get('refresh_images')
 
-    print(refresh_images)
-    # if refresh_images.lower() == 'true':
-    #     remove_temp_images()
-
-    get_images(query, int(offset))
+    google_images.get_images(query, int(offset))
     image_dir_list = os.listdir(app.config["IMAGES_DIR"])
     images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f] 
 

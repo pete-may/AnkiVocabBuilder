@@ -3,7 +3,7 @@ import os
 import base64
 import html
 
-# from unidecode import unidecode
+from urllib.parse import unquote_plus
 
 from app import app
 
@@ -57,6 +57,7 @@ class Anki:
     def add_note(self, deck_name, word, image_paths, recording_file_path, recording_type, ipa_text, gender, notes):
         stored_images = []
         for i, image_path in enumerate(image_paths):
+            image_path = unquote_plus(image_path)
             print("image_path")
             print(image_path)
             if not image_path:
