@@ -1,27 +1,22 @@
-from flask import render_template, url_for, request, flash, redirect, jsonify
+from flask import render_template, url_for, request, redirect, jsonify
 from app import app, forms, anki, wiktionary, forvo, google_images
-from app import local_recording_choices
 from app import remove_temp_recordings, remove_temp_images
-
 
 import re
 import os
-
-
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/submit', methods=['GET', 'POST'])
 def index():
     form = forms.SubmitForm()
+    language_choices = [(l, l) for l in app.config["LANGUAGES"]]
 
-    language_choices = [(l.capitalize(), l.capitalize()) for l in app.config["LANGUAGES"]]
     try:
         deck_choices = [(d, d) for d in anki.get_deck_names()]
     except:
         err_msg = "An exception occurred. Failed to establish a connection to Anki."
         return render_template("500.html", error=err_msg), 500
-
 
     form.language.choices = language_choices
     form.deck.choices = deck_choices
@@ -40,19 +35,15 @@ def index():
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
-
     form = forms.CreateForm()
-
     form.recording.choices = []
 
     if form.validate_on_submit():
-        # flash(form.data)
         try:
             anki.add_note(form.deck.data,
                           form.word.data,
                           form.images.data.split(","),
                           form.recording.data,
-                          form.recording_type.data,
                           form.ipa.data,
                           form.gender.data,
                           form.notes.data
@@ -68,9 +59,7 @@ def create():
 
     # request is a POST and it didn't pass validation; return to index
     if request.method == 'POST':
-        # flash(form.data)
-        # flash(form.errors)
-        return redirect(url_for('index'))  
+        return redirect(url_for('index'))
 
     # cleanup tmp folders
     remove_temp_recordings()
@@ -80,7 +69,7 @@ def create():
     deck = request.args.get('deck', None)
     word = request.args.get('word', None)
 
-    # autofill gender selection
+    # autofill gender selection (Spanish only)
     words = word.split()
     if 'el' in words:
         words = [w for w in words if w != 'el']
@@ -93,40 +82,28 @@ def create():
     else:
         form.gender.data = 'none'
 
-    # print(language)
-    # print(deck)
-    # print(word)
-
     form.deck.data = deck
     form.word.data = word
     form.search_query.data = word
 
-    # scrape all the things
+    ### scrape all the things
 
     # recordings
-    # do forvo first so we can fail if there's no word
+    # do forvo first so we can fail if the word doesn't exist
     try:
         forvo.download(word)
     except:
         err_msg = "A Forvo exception occurred. That word probably doesn't exist."
         return render_template("500.html", error=err_msg), 500
 
-    dir_list = os.listdir(app.config["FORVO_RECORDINGS_DIR"])
-    forvo_recording_choices = [f for f in dir_list if os.path.isfile(app.config["FORVO_RECORDINGS_DIR"]+'/'+f)]
-    form.recording.choices = [(c,c) for c in forvo_recording_choices]
-
-    # local recording stuff
-    # TODO: remove this ish
-    # form.recording.choices = [(c,c) for c in local_recording_choices]
-    # form.recording_type.data = 'local'
-    # matches = [match for match in local_recording_choices if word in match]
-    # if matches:
-    #     form.recording.data = matches[0]
+    recordings_dir_list = os.listdir(app.config["RECORDINGS_DIR"])
+    recording_choices = [f for f in recordings_dir_list if os.path.isfile(app.config["RECORDINGS_DIR"] + '/' + f)]
+    form.recording.choices = [(c,c) for c in recording_choices]
 
     # images
     google_images.get_images(word, 0)
     image_dir_list = os.listdir(app.config["IMAGES_DIR"])
-    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f]
+    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"] + '/' + f) and ".jpg" in f]
 
     # ipa
     wikiObject = wiktionary.search(word, language)
@@ -135,11 +112,12 @@ def create():
         if match:
             form.ipa.data = re.search("/.*/", wikiObject["ipa"]).group()
 
-    return render_template('create.html', form=form, 
+    return render_template('create.html', form=form,
                                           query=word,
                                           images=images_list)
 
 
+# search for extra images within the current query
 @app.route('/get_more_images')
 def get_more_images():
     query = request.args.get('query')
@@ -148,7 +126,7 @@ def get_more_images():
 
     google_images.get_images(query, int(offset))
     image_dir_list = os.listdir(app.config["IMAGES_DIR"])
-    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f] 
+    images_list = [f for f in image_dir_list if os.path.isfile(app.config["IMAGES_DIR"]+'/'+f) and ".jpg" in f]
 
     return jsonify(images_list)
 
@@ -156,9 +134,4 @@ def get_more_images():
 @app.route('/<path:path>')
 def static_file(path):
     return app.send_static_file(path)
-
-
-
-
-
 

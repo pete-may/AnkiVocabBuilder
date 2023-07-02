@@ -1,2 +1,1 @@
 FLASK_APP=ankibvocabbuilder.py
-API_KEY=None

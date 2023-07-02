@@ -41,11 +41,13 @@ class Forvo:
 
     def get_pronunciations(self) -> Forvo:
         res = requests.get(self.url, headers=HEADERS)
+
         if res.status_code == 200:
             page = res.text
         else:
             print(res)
             raise Exception("failed to fetch forvo page")
+
         html = BeautifulSoup(page, "lxml")
         available_langs_els = html.find_all(
             id=re.compile(r"language-container-\w{2,4}"))
@@ -53,6 +55,7 @@ class Forvo:
             re.findall(
                 r"language-container-(\w{2,4})",
                 el.attrs["id"])[0] for el in available_langs_els]
+
         if self.language not in available_langs:
             return self
 
@@ -63,7 +66,7 @@ class Forvo:
         pronunciations_els = lang_container.find_all(class_="pronunciations")
         pronunciation_items = pronunciations_els[0].find_all(
             class_="pronunciations-list")[0].find_all("li")
-        
+
         word = self.url.rsplit('/', 2)[-1]
         headword_el = pronunciations_els[0].find_all('em')[0]
         headword = headword_el.find_all(text=True)[0].text
@@ -102,11 +105,6 @@ class Forvo:
                 pronunciation_dl = pronunciation_dls[0]
                 dl_url = "https://audio00.forvo.com/audios/mp3/" + \
                     str(base64.b64decode(pronunciation_dl), "utf-8")
-            #data_id = int(
-            #    pronunciation_item.find_all(
-            #        class_="more")[0].find_all(
-            #        class_="main_actions")[0].find_all(
-            #        class_="share")[0].attrs["data-id"])
             username = pronunciation_item.find_all(
                 class_="info", recursive=False)[0].find_all(
                     class_="ofLink")
@@ -120,7 +118,7 @@ class Forvo:
                                 "Pronunciation by(.*)",
                                 pronunciation_item_content.contents[0],
                                 re.S)
-                                
+
                     if len(tempOrigin) != 0:
                         origin = tempOrigin[0].strip()
                         break
@@ -163,31 +161,16 @@ def fetch_audio_best(word: str, lang: str) -> Dict[str, str]:
 
 def download(word):
     recordings_dir = os.path.join(os.getcwd(), "app", "static", "tmp", "recordings")
-    # print(recordings_dir)
-    # return
-
     datas = fetch_audio_all(word, "es")
-    # cfg["TEMP_DIR"]
 
     for e in datas:
-        # temp_dir = os.path.join(os.getcwd(), cfg["TEMP_DIR"]) + "recordings"
-        # print(temp_dir)
-        # return
-        print(e)
-        print(datas[e])
-        # data = urlopen(datas[e]).read()
-        page=urllib.request.Request(datas[e],headers={'User-Agent': 'Mozilla/5.0'}) 
+        page=urllib.request.Request(datas[e],headers={'User-Agent': 'Mozilla/5.0'})
         data = urllib.request.urlopen(page).read()
         doc = requests.get(datas[e])
-        print(e)
-        print(datas[e])
         e = e.replace('/', '_')
-        # with tempfile.NamedTemporaryFile(mode="wb", delete=False, suffix=".mp3", dir=recordings_dir) as f:
         with open(recordings_dir + "/" + e + ".mp3", "wb") as f:
             f.write(data)
 
 
-
 if __name__ == "__main__":
     print(fetch_audio_all("delicate", "en"))
-    #print(fetch_audio_best("goodbye", "en"))

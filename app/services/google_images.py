@@ -9,18 +9,18 @@ from serpapi import GoogleSearch
 from unidecode import unidecode
 
 redis_client = redis.Redis()
+
 BATCH_SIZE = 6
+SKIP_INDEXES = []
 
 
 class GoogleImages:
-
     def __init__(self, api_key):
         self.api_key = api_key
 
     def get_images(self, query, offset=0):
         image_results = []
         results = {}
-
 
         search_id = ""
         REDIS_RUNNING = True
@@ -34,6 +34,7 @@ class GoogleImages:
             search_id = search_id.decode("utf-8")
             print("found past search: " + search_id)
             results = GoogleSearch({"api_key": self.api_key}).get_search_archive(search_id, 'json')
+            # print(results)
         else:
             print("no past search found, starting new search")
 
@@ -49,7 +50,7 @@ class GoogleImages:
 
             search = GoogleSearch(params)         # where data extraction happens
             results = search.get_dict()       # JSON -> Python dictionary
-            
+            # print(results)
 
             new_search_id = results.get("search_metadata").get("id")
             print("search id:")
@@ -62,11 +63,8 @@ class GoogleImages:
 
         for index, image in enumerate(results["images_results"]):
 
-            # if index == 5:
-            #     continue
-
-            # if index == 0:
-            #     continue
+            if index in SKIP_INDEXES:
+                continue
 
             if index < offset*BATCH_SIZE:
                 continue
@@ -88,8 +86,5 @@ class GoogleImages:
                 urllib.request.urlretrieve(image["original"], f"app/static/tmp/images/{query}_img_{index}.jpg")
             except urllib.error.URLError:
                 print(f"Downloading {index} image FAILED - 404")
-            
-
-
 
 

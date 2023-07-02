@@ -1,7 +1,6 @@
 from wiktionaryparser import WiktionaryParser
 
 class Wiktionary:
-
     def __init__(self):
         self.parser = WiktionaryParser()
 

@@ -7,6 +7,7 @@ from urllib.parse import unquote_plus
 
 from app import app
 
+
 class Anki:
     URL = "http://localhost:8765/"
     VERSION = 6
@@ -48,44 +49,25 @@ class Anki:
         self.invoke(action, params)
         return dst
 
-
-    # @staticmethod
-    # def format_notes(notes):
-    #     html_notes = "<br>".join(html.escape(notes.strip()).split("\n"))
-    #     return "<div>{}</div>".format(html_notes)
-
-    def add_note(self, deck_name, word, image_paths, recording_file_path, recording_type, ipa_text, gender, notes):
+    def add_note(self, deck_name, word, image_paths, recording_file_path, ipa_text, gender, notes):
         stored_images = []
         for i, image_path in enumerate(image_paths):
             image_path = unquote_plus(image_path)
-            print("image_path")
-            print(image_path)
             if not image_path:
                 continue
-            image_path_path = app.config["IMAGES_DIR"] + '/' + image_path
-            print(image_path_path)
-            stored_images.append(self.store_media_file(image_path_path, "{}-{}".format(word, i)))
+            image_full_path = app.config["IMAGES_DIR"] + '/' + image_path
+            stored_images.append(self.store_media_file(image_full_path, "{}-{}".format(word, i)))
 
         picture_field = ""
         for stored_image in stored_images:
             picture_field += '<img src="{}">'.format(stored_image)
 
-        # formatted_notes = self.format_notes(notes)
         formatted_notes = notes
 
-        # pronunciation_field = ipa_text
-
         if recording_file_path:
-            print("recording_path")
-            print(recording_file_path)
-            print(recording_type)
-            recording_file_path_path = ''
-            if recording_type == 'local':
-                recording_file_path_path = app.config["LOCAL_RECORDINGS_DIR"] + '/' + recording_file_path
-            else:
-                recording_file_path_path = app.config["FORVO_RECORDINGS_DIR"] + '/' + recording_file_path
-            print(recording_file_path_path)
-            stored_audio_filename = self.store_media_file(recording_file_path_path, word)
+            recording_file_full_path = ''
+            recording_file_path = app.config["RECORDINGS_DIR"] + '/' + recording_file_path
+            stored_audio_filename = self.store_media_file(recording_file_path, word)
             pronunciation_field = "[sound:{}]".format(stored_audio_filename)
 
         gender_selection = ''

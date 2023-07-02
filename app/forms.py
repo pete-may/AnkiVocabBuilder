@@ -8,14 +8,12 @@ class SubmitForm(FlaskForm):
     word = StringField("Word", validators=[DataRequired()])
     submit = SubmitField("Submit", id="submit_submit")
 
-
 class CreateForm(FlaskForm):
     deck = HiddenField("Deck", validators=[DataRequired()])
     word = HiddenField("Word", validators=[DataRequired()])
     images = HiddenField("Images")
     search_query = HiddenField("Search Query")
     recording = SelectField("Recording", validate_choice=False)
-    recording_type = HiddenField("Recording Type")
     ipa = StringField("IPA")
     gender = RadioField("Gender", choices=[('none', 'None'), ('male','Male'),('female','Female'), ('either', 'Either')])
     notes = TextAreaField("Notes")

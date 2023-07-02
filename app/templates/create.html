@@ -2,112 +2,67 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h1>Create Vocab Card</h1>
+<h1>Create Vocab Card</h1>
+<br>
+<div class="row">
+    <b>Redo image search</b>
     <br>
-    <div class="row">
-        <b>Redo image search</b>
-        <br>
-        <form id="image_search">
-            <input type="text" id=image_query>
-            <input type="submit" value="Submit">
-        </form>
-    </div>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
+    <form id="image_search">
+        <input type="text" id=image_query>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
 
-        <b>Images</b> 
-        <p class="text-muted my-2">Click on the images below to select them.<br>
-            Click on any selected images to remove them.
-        </p>
-        
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="gallery" style="text-align: center">
-                        <div id="images_row" class="row">
-                            {% for image in images %}
-                                <div class="gallery-item-wrapper col-md-4">
-                                    <div class="gallery-item">
-                                        <img class="img-responsive" src="{{ url_for('static', filename='tmp/images/' + image) }}">
-                                    </div>
+    <b>Images</b>
+    <p class="text-muted my-2">Click on the images below to select them.<br>
+        Click on any selected images to remove them.
+    </p>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="gallery" style="text-align: center">
+                    <div id="images_row" class="row">
+                        {% for image in images %}
+                            <div class="gallery-item-wrapper col-md-4">
+                                <div class="gallery-item">
+                                    <img class="img-responsive" src="{{ url_for('static', filename='tmp/images/' + image) }}">
                                 </div>
-                            {% endfor %}
-                        </div>
-                        <div id="loader" class="row">
-                            <button type="button" onclick="loadMoreImages(false)">Load more images...</button>
-                        </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="gallery-selected" style="text-align: center">
-                        <p>Images to Use</p>
+                    <div id="loader" class="row">
+                        <button type="button" onclick="loadMoreImages()">Load more images...</button>
                     </div>
                 </div>
             </div>
+            <div class="col-sm-6">
+                <div class="gallery-selected" style="text-align: center">
+                    <p>Images to Use</p>
+                </div>
+            </div>
         </div>
+    </div>
 
-        {# <h3><b>Recording</b></h2> #}
-        {# <div> #}
-        {#     <h3>Forvo</h3> #}
-        {#     <p>Pick a recording, downloaded from the Forvo API.</p> #}
-        {#     <span id="forvo_file"></span> #}
-        {#     <select name="cars" id="cars"> #}
-        {#         <option value="volvo">Volvo</option> #}
-        {#         <option value="saab">Saab</option> #}
-        {#         <option value="mercedes">Mercedes</option> #}
-        {#         <option value="audi">Audi</option> #}
-        {#     </select> #}
-        {# </div> #}
+    {{ wtf.form_field(form.recording) }}
 
+    <button type="button" onclick="playSound()" >Play Pronunciation</button>
 
-          {# <!-- Nav tabs --> #}
-          {# <ul class="nav nav-tabs"> #}
-          {#   <li class="active"> #}
-          {#       <a data-toggle="tab" href="#local" onclick="handleTabClick('local')">Local</a> #}
-          {#   </li> #}
-          {#   <li> #}
-          {#       <a data-toggle="tab" href="#forvo" onclick="handleTabClick('forvo')">Forvo</a> #}
-          {#   </li> #}
-          {# </ul> #}
+    <br><br>
 
-          {# <!-- Tab panes --> #}
-          {# <div class="tab-content"> #}
-          {#   <!-- REMOVE ME --> #}
-          {#   <div id="local" class="tab-pane active"> #}
-          {#       <h3>Local</h3> #}
-          {#       <p>Choose recording from local filesystem.</p> #}
-          {#  #}
-          {#       <span id="local_file">{{ form.recording() }}</span> #}
-          {#  #}
-          {#     <button type="button" onclick="playSound('local')" >Play Pronunciation</button> #}
-          {#   </div> #}
-          {#   <div id="forvo" class="tab-pane" > #}
-          {#         <h3>Forvo</h3> #}
-          {#         <p>Pick a recording using the Forvo API.</p> #}
-          {#  #}
-          {#         <span id="forvo_file"></span> #}
-          {#  #}
-          {#         <button type="button" onclick="playSound('forvo')" >Play Pronunciation</button> #}
-          {#   </div> #}
-          {# </div> #}
+    {{ wtf.form_field(form.ipa) }}
 
-        {{ wtf.form_field(form.recording) }}
-        <button type="button" onclick="playSound('forvo')" >Play Pronunciation</button>
+    <b>Gender</b>
 
-        <br><br>
+    {{ wtf.form_field(form.gender) }}
 
-        {{ wtf.form_field(form.ipa) }}
+    {{ wtf.form_field(form.notes) }}
 
-        <b>Gender</b>
-
-        {{ wtf.form_field(form.gender) }}
-
-        {{ wtf.form_field(form.notes) }}
-
-        {{ wtf.form_field(form.submit) }}
-
-    </form>
-    <script type="text/javascript">
-        var offset = 1
-    </script>
+    {{ wtf.form_field(form.submit) }}
+</form>
+<script type="text/javascript">
+    var offset = 0
+</script>
 {% endblock %}
