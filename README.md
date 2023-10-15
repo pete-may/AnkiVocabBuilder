@@ -8,7 +8,7 @@ When your finished, click Add to Anki, and the card will be inserted into your l
 
 ### Demo
 
-TODO: add a demo vid
+![AnkiVocabBuilder Demo](https://github.com/pete-may/AnkiVocabBuilder/assets/16448655/e8fe68e1-bbbb-4eb0-b5e4-23f7b40ac3c5)
 
 ### Media Sources
 
