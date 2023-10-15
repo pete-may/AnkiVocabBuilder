@@ -71,12 +71,10 @@ class Anki:
             pronunciation_field = "[sound:{}]".format(stored_audio_filename)
 
         gender_selection = ''
-        if gender == 'male':
+        if gender == 'masculine':
             gender_selection = 'm'
-        elif gender == 'female':
+        elif gender == 'feminine':
             gender_selection = 'f'
-        elif gender == 'either':
-            gender_selection = 'e'
 
         params = {
             "note": {
@@ -87,7 +85,7 @@ class Anki:
                     "Picture": picture_field,
                     "Recording": pronunciation_field,
                     "IPA": ipa_text,
-                    "Gender (m/f/e)": gender_selection,
+                    "Gender (m/f)": gender_selection,
                     "Notes": formatted_notes
                 },
                 "tags": []

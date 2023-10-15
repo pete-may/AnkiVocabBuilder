@@ -1,6 +1,6 @@
 # AnkiVocabBuilder
 
-AnkiVocabBuilder is a language learning tool that helps you easily generate a deck of Anki flashcards to learn vocab words in your target language.
+AnkiVocabBuilder is a language learning tool that helps you generate a deck of Anki flashcards to learn vocab words in your target language.
 
 Submit a word and and it provides a simple interface that lets you select image and audio files to add to your flashcards.
 

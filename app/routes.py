@@ -77,11 +77,11 @@ def create():
     if 'el' in words:
         words = [w for w in words if w != 'el']
         word = ' '.join(words)
-        form.gender.data = 'male'
+        form.gender.data = 'masculine'
     elif 'la' in words:
         words = [w for w in words if w != 'la']
         word = ' '.join(words)
-        form.gender.data = 'female'
+        form.gender.data = 'feminine'
     else:
         form.gender.data = 'none'
 

@@ -15,6 +15,6 @@ class CreateForm(FlaskForm):
     search_query = HiddenField("Search Query")
     recording = SelectField("Recording", validate_choice=False)
     ipa = StringField("IPA")
-    gender = RadioField("Gender", choices=[('none', 'None'), ('male','Male'),('female','Female'), ('either', 'Either')])
+    gender = RadioField("Gender", choices=[('none', 'None'), ('masculine','Masculine'), ('feminine','Feminine')])
     notes = TextAreaField("Notes")
     submit = SubmitField("Add to Anki", id="create_submit")
