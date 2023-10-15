@@ -5,6 +5,23 @@ img {
     max-height: 80px
 }
 
+body  {
+    background: url("../retro-world-map-background-with-blank-notebook-camera_23-2147607766.png");
+    background-size: cover;
+}
+
+.submit, .create, .error{
+    background-color: #ffffff;
+    display: inline-block;
+    padding: 20px 30px;
+    /* padding-top: 20px; */
+    /* padding-bottom: 20px; */
+    /* padding-left: 30px; */
+    /* padding-right: 30px; */
+    border-radius: 25px;
+    min-width: 500px;
+}
+
 .tab button {
   background-color: inherit;
   float: left;

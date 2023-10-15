@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, redirect, jsonify
+from flask import render_template, url_for, request, redirect, jsonify, flash
 from app import app, forms, anki, wiktionary, forvo, google_images
 from app import remove_temp_recordings, remove_temp_images
 
@@ -10,12 +10,13 @@ import os
 @app.route('/submit', methods=['GET', 'POST'])
 def index():
     form = forms.SubmitForm()
-    language_choices = [(l, l) for l in app.config["LANGUAGES"]]
+    language_choices = [(l, l) for l in app.config["LANGUAGES"].keys()]
 
     try:
         deck_choices = [(d, d) for d in anki.get_deck_names()]
     except:
         err_msg = "An exception occurred. Failed to establish a connection to Anki."
+        print(err_msg)
         return render_template("500.html", error=err_msg), 500
 
     form.language.choices = language_choices
@@ -27,7 +28,7 @@ def index():
     if form.validate_on_submit():
         language = form.language.data
         deck = form.deck.data
-        word = form.word.data
+        word = form.word.data.lower()
         return redirect(url_for('create', language=language, deck=deck, word=word))
 
     return render_template('submit.html', form=form)
@@ -48,9 +49,11 @@ def create():
                           form.gender.data,
                           form.notes.data
                           )
+            flash("Card added successfully!")
         except Exception as e:
             if 'duplicate' in str(e):
                 err_msg = "An exception occurred. Duplicate card found in Anki."
+                print(err_msg)
                 return render_template("500.html", error=err_msg), 500
             else:
                 return render_template("500.html", error=e), 500
@@ -91,8 +94,8 @@ def create():
     # recordings
     # do forvo first so we can fail if the word doesn't exist
     try:
-        forvo.download(word)
-    except:
+        forvo.download(word, app.config["LANGUAGES"][language])
+    except Exception as e:
         err_msg = "A Forvo exception occurred. That word probably doesn't exist."
         return render_template("500.html", error=err_msg), 500
 
@@ -110,7 +113,11 @@ def create():
     if wikiObject.get("ipa"):
         match = re.search("/.*/", wikiObject["ipa"])
         if match:
-            form.ipa.data = re.search("/.*/", wikiObject["ipa"]).group()
+            form.ipa.data = match.group()
+        else:
+            match = re.search("\[.*\]", wikiObject["ipa"])
+            if match:
+                form.ipa.data = match.group()
 
     return render_template('create.html', form=form,
                                           query=word,

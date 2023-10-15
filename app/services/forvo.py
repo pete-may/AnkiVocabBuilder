@@ -6,7 +6,6 @@ from os import path
 import os
 import re
 import base64
-from PyQt5.QtCore import QStandardPaths, QCoreApplication
 from pathlib import Path
 from urllib.parse import quote, unquote
 from dataclasses import dataclass
@@ -16,8 +15,6 @@ import tempfile
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-datapath = QStandardPaths.writableLocation(QStandardPaths.DataLocation)
-Path(path.join(datapath, "_forvo")).mkdir(parents=True, exist_ok=True)
 
 
 @dataclass
@@ -45,7 +42,6 @@ class Forvo:
         if res.status_code == 200:
             page = res.text
         else:
-            print(res)
             raise Exception("failed to fetch forvo page")
 
         html = BeautifulSoup(page, "lxml")
@@ -123,7 +119,7 @@ class Forvo:
                         origin = tempOrigin[0].strip()
                         break
             else:
-                origin = username[0].contents[0]
+                origin = username[0].contents[0].strip()
             pronunciation_object = Pronunciation(self.language,
                                                  headword,
                                                  word,
@@ -159,9 +155,9 @@ def fetch_audio_best(word: str, lang: str) -> Dict[str, str]:
         sounds[0].headword: sounds[0].download_url}
 
 
-def download(word):
+def download(word, lang):
     recordings_dir = os.path.join(os.getcwd(), "app", "static", "tmp", "recordings")
-    datas = fetch_audio_all(word, "es")
+    datas = fetch_audio_all(word, lang)
 
     for e in datas:
         page=urllib.request.Request(datas[e],headers={'User-Agent': 'Mozilla/5.0'})

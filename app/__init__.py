@@ -22,6 +22,10 @@ wiktionary = wiktionary.Wiktionary()
 def setup_temp_dir():
     if not os.path.exists(app.config["TMP_DIR"]):
         os.makedirs(os.path.join(os.getcwd(), app.config["TMP_DIR"]))
+    if not os.path.exists(app.config["RECORDINGS_DIR"]):
+        os.makedirs(os.path.join(os.getcwd(), app.config["RECORDINGS_DIR"]))
+    if not os.path.exists(app.config["IMAGES_DIR"]):
+        os.makedirs(os.path.join(os.getcwd(), app.config["IMAGES_DIR"]))
 
 def remove_temp_recordings():
     for r, dirs, files in os.walk(os.path.join(os.getcwd(), app.config["RECORDINGS_DIR"]), topdown=False):

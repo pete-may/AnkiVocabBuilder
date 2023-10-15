@@ -6,7 +6,8 @@ class Config(object):
     RECORDINGS_DIR = os.path.join(os.getcwd(), "app", "static", "tmp", "recordings")
     IMAGES_DIR = os.path.join(os.getcwd(), "app", "static", "tmp", "images")
     TMP_DIR = os.path.join(os.getcwd(), "app", "static", "tmp")
-    LANGUAGES = ["Spanish"]
+    LANGUAGES = {"Spanish": "es", "French": "fr", "Russian": "ru"}
     NOTE_TYPE = "Vocab Word"
-    SERP_API_KEY = ""
+    SERP_API_KEY = "<YOUR_KEY_HERE>"
     DEFAULT_DECK = "Spanish::Vocab"
+

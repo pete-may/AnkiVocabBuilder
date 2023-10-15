@@ -34,7 +34,6 @@ class GoogleImages:
             search_id = search_id.decode("utf-8")
             print("found past search: " + search_id)
             results = GoogleSearch({"api_key": self.api_key}).get_search_archive(search_id, 'json')
-            # print(results)
         else:
             print("no past search found, starting new search")
 
@@ -44,13 +43,11 @@ class GoogleImages:
                 "q": query,
                 "tbm": "isch",
                 "api_key": self.api_key,
-                "tbs": "isz:m",
-                "hl": "es"
+                "tbs": "isz:m"
             }
 
             search = GoogleSearch(params)         # where data extraction happens
             results = search.get_dict()       # JSON -> Python dictionary
-            # print(results)
 
             new_search_id = results.get("search_metadata").get("id")
             print("search id:")
