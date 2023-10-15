@@ -56,7 +56,7 @@ python3 -m venv venv
 pip3 install -r requirements.txt
 ```
 
-#### 3. Add your SerpAPI secret key to the [config file](./config.py)
+#### 3. Add your SerpAPI secret key to the [config file](./config.py#L11)
 
 ```
     SERP_API_KEY = <YOUR_KEY_HERE>
@@ -90,7 +90,7 @@ flask run
 
 ### Adding a language
 
-To add a new language, add the language name and its [lanuage code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) to the [config file](./config.py):
+To add a new language, add the language name and its [lanuage code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) to the [config file](./config.py#L9):
 
 ```
     LANGUAGES = {"Spanish": "es", "French": "fr", "Russian": "ru"}
