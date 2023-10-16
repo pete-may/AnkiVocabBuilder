@@ -20,7 +20,7 @@ When your finished, click Add to Anki, and the card will be inserted into your l
 
 #### 1. [Download Anki](https://apps.ankiweb.net/)
 
-#### 2. [Install AnkiConnect](https://ankiweb.net/shared/info/2055492159)
+#### 2. [Install the Anki Add-on: AnkiConnect](https://ankiweb.net/shared/info/2055492159)
 
 #### 3. Download the template deck
 I've provided a template deck that you can use to get started.
@@ -35,9 +35,6 @@ This deck contains a note type that AnkiVocabBuilder uses to create new cards. Y
 This app uses SerpAPI to get images from Google Images. You'll need to create an account to use this app. There's a free tier that allows you to make 100 searches per month.
 
 Go to <https://serpapi.com/> and create an account. You will need to [add your SerpAPI secret key to the config file.](#3-add-your-serpapi-secret-key-to-the-config-file)
-
-#### 5. Download Redis (optional)
-The free version of SerpAPI limits the number of searches you can do per month. To help avoid hitting this limit on repeat searches, AnkiVocabBuilder caches SerpAPI search ids in a locally running Redis database. If you don't want to use Redis, simply don't install it.
 
 ## Installing
 
@@ -63,6 +60,7 @@ pip3 install -r requirements.txt
 ```
 
 #### 4. Install Redis to cache SerpAPI search ids (optional)
+The free version of SerpAPI limits the number of searches you can do per month. To help avoid hitting this limit on repeat searches, AnkiVocabBuilder caches SerpAPI search ids in a locally running Redis database. If you don't want to use Redis, simply don't install it.
 
 macOS:
 ```code
