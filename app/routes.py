@@ -23,7 +23,8 @@ def index():
     form.deck.choices = deck_choices
 
     # default deck
-    form.deck.data = app.config["DEFAULT_DECK"]
+    if not form.deck.data:
+        form.deck.data = app.config["DEFAULT_DECK"]
 
     if form.validate_on_submit():
         language = form.language.data
@@ -96,7 +97,8 @@ def create():
     try:
         forvo.download(word, app.config["LANGUAGES"][language])
     except Exception as e:
-        err_msg = "A Forvo exception occurred. That word probably doesn't exist."
+        print(e)
+        err_msg = "A Forvo exception occurred."
         return render_template("500.html", error=err_msg), 500
 
     recordings_dir_list = os.listdir(app.config["RECORDINGS_DIR"])
