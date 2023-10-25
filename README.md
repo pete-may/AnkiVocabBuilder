@@ -97,6 +97,6 @@ To add a new language, add the language name and its [lanuage code](https://en.w
 ## Acknowledgements
 
 - The philosophy behind this app comes from the Fluent Forever method: <https://blog.fluent-forever.com/gallery/>
-- This design of this app was based off of this project: <https://github.com/cofinley/FluentForeverVocabBuilder>
+- This app is based off of this project: <https://github.com/cofinley/FluentForeverVocabBuilder> which I fixed up and added a few features to.
 - The Forvo implementation came from: <https://github.com/FreeLanguageTools/vocabsieve>
 - This tutorial taught me a lot about Flask: <https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world>
