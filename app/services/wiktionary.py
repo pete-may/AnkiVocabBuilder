@@ -5,7 +5,7 @@ class Wiktionary:
         self.parser = WiktionaryParser()
 
     def search(self, query, language):
-        self.parser.set_default_language(language)
+        self.parser.language = language
         query = self.parser.fetch(query)[0]
         pronunciation = query["pronunciations"]
         if len(pronunciation["text"]):
