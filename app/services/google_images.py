@@ -58,6 +58,10 @@ class GoogleImages:
 
         # Downloading images
 
+        if not results:
+            print("google_images.py:: whoops, no results found")
+            return
+
         for index, image in enumerate(results["images_results"]):
 
             if index in SKIP_INDEXES:

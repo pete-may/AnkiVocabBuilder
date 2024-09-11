@@ -14,7 +14,10 @@ import urllib.request
 import tempfile
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    "Host": "forvo.com",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:128.0) Gecko/20100101 Firefox/128.0",
+    "Upgrade-Insecure-Requests": "1"
+}
 
 
 @dataclass
@@ -37,22 +40,26 @@ class Forvo:
         self.language = lang
 
     def get_pronunciations(self) -> Forvo:
+        print("forvo.py:: fetching: ", self.url)
         res = requests.get(self.url, headers=HEADERS)
 
         if res.status_code == 200:
             page = res.text
         else:
+            print("forvo.py:: result code: ", res.status_code)
+            print("forvo.py:: reason: ", res.reason)
             raise Exception("failed to fetch forvo page")
 
         html = BeautifulSoup(page, "lxml")
         available_langs_els = html.find_all(
-            id=re.compile(r"language-container-\w{2,4}"))
+            id="language-container-es")
         available_langs = [
             re.findall(
                 r"language-container-(\w{2,4})",
                 el.attrs["id"])[0] for el in available_langs_els]
 
         if self.language not in available_langs:
+            print("forvo.py:: language not available")
             return self
 
         lang_container = [
