@@ -25,7 +25,7 @@ When your finished, click Add to Anki, and the card will be inserted into your l
 #### 3. Download the template deck
 I've provided a template deck that you can use to get started.
 
-Go to <https://ankiweb.net/shared/info/1737709539> and click "Download" to download the deck. Then import it into Anki.
+Go to <https://ankiweb.net/shared/info/296754990> and click "Download" to download the deck. Then import it into Anki.
 
 This deck contains a note type that AnkiVocabBuilder uses to create new cards. You can customize this note type to your liking.
 
