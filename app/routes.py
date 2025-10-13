@@ -74,7 +74,7 @@ def create():
     word = request.args.get('word', None)
 
     # autofill gender selection (Spanish only)
-    words = word.split()
+    words = [w.strip(u'\u200b') for w in word.split()]
     if 'el' in words:
         words = [w for w in words if w != 'el']
         word = ' '.join(words)
@@ -112,6 +112,10 @@ def create():
 
     # ipa
     wikiObject = wiktionary.search(word, language)
+    if not wikiObject:
+        err_msg = "An exception occurred. Wiktionary lookup failed."
+        print(err_msg)
+        return render_template("500.html", error=err_msg), 500
     if wikiObject.get("ipa"):
         match = re.search("/.*/", wikiObject["ipa"])
         if match:

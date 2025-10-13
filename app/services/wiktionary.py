@@ -6,7 +6,12 @@ class Wiktionary:
 
     def search(self, query, language):
         self.parser.language = language
-        query = self.parser.fetch(query)[0]
+        res = self.parser.fetch(query)
+        if not isinstance(res, list):
+            print("Wiktionary search failed. No results found.")
+            return None
+
+        query = res[0]
         pronunciation = query["pronunciations"]
         if len(pronunciation["text"]):
             ipa = pronunciation["text"][0].replace("IPA: ", "")
