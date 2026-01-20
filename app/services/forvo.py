@@ -1,7 +1,6 @@
 from __future__ import annotations
 from bs4 import BeautifulSoup
 from typing import List, Dict
-import requests
 from os import path
 import os
 import re
@@ -11,14 +10,8 @@ from urllib.parse import quote, unquote
 from dataclasses import dataclass
 
 import urllib.request
+from curl_cffi import requests
 import tempfile
-
-HEADERS = {
-    "Host": "forvo.com",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:128.0) Gecko/20100101 Firefox/128.0",
-    "Upgrade-Insecure-Requests": "1"
-}
-
 
 @dataclass
 class Pronunciation:
@@ -41,7 +34,7 @@ class Forvo:
 
     def get_pronunciations(self) -> Forvo:
         print("forvo.py:: fetching: ", self.url)
-        res = requests.get(self.url, headers=HEADERS)
+        res = requests.get(self.url, impersonate="chrome120")
 
         if res.status_code == 200:
             page = res.text

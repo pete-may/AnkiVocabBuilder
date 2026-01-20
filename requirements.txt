@@ -1,9 +1,11 @@
 beautifulsoup4==4.12.2
 blinker==1.6.2
 bs4==0.0.1
-certifi==2023.7.22
+certifi==2026.1.4
+cffi==2.0.0
 charset-normalizer==3.2.0
 click==8.1.7
+curl_cffi==0.14.0
 dominate==2.8.0
 Flask==2.3.3
 Flask-Bootstrap==3.3.7.1
@@ -14,6 +16,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 lxml==4.9.3
 MarkupSafe==2.1.3
+pycparser==2.23
 python-dotenv==1.0.0
 redis==5.0.0
 requests==2.31.0
@@ -22,6 +25,5 @@ Unidecode==1.3.6
 urllib3==2.0.4
 visitor==0.1.3
 Werkzeug==2.3.7
+wiktionaryparser @ git+https://github.com/pragma-/WiktionaryParser@7cfc2ec9c11ba14323d1e05a029cd66b06e40575
 WTForms==3.0.1
-
-git+https://github.com/pragma-/WiktionaryParser@master
