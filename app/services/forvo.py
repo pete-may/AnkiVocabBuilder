@@ -34,7 +34,7 @@ class Forvo:
 
     def get_pronunciations(self) -> Forvo:
         print("forvo.py:: fetching: ", self.url)
-        res = requests.get(self.url, impersonate="chrome120")
+        res = requests.get(self.url, impersonate="chrome")
 
         if res.status_code == 200:
             page = res.text
@@ -44,8 +44,7 @@ class Forvo:
             raise Exception("failed to fetch forvo page")
 
         html = BeautifulSoup(page, "lxml")
-        available_langs_els = html.find_all(
-            id="language-container-es")
+        available_langs_els = html.find_all(class_="language-container")
         available_langs = [
             re.findall(
                 r"language-container-(\w{2,4})",
